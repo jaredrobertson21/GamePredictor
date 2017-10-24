@@ -3,14 +3,19 @@ from bs4 import BeautifulSoup
 
 url = 'https://hockey-reference.com'
 
+# store game id as YYYYMMDD0HOM, where HOM is the first three letters of the home city
+
+def get_html(url):
+    req = requests.get(url)
+    return BeautifulSoup(req.text, 'html.parser')
+
 
 def get_games_results():
     """
     Retrieves all games results from the previous day
     :return: a list of dictionaries with the keys: winner, winner_score, loser, loser_score
     """
-    req = requests.get(url)
-    html = BeautifulSoup(req.text, 'html.parser')
+    html = get_html(url)
     games_summary = html.find_all(class_='game_summary')
     daily_games_results = []
 
@@ -25,6 +30,17 @@ def get_games_results():
     return daily_games_results
 
 def get_upcoming_games():
-    req = requests.get(url)
-    html = BeautifulSoup(req.text, 'html.parser')
+    html = get_html(url)
     games_list = html.find_all('div', {"id": "games"})
+    upcoming_games = []
+    for game in games_list:
+        game_list_links = game.find_all('a')
+        individual_game = []
+        for team in game_list_links:
+            individual_game.append(team.get_text())
+        print(individual_game)
+        upcoming_games.append(individual_game)
+    return upcoming_games
+    # get home team
+    # get away team
+
