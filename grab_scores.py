@@ -1,9 +1,10 @@
 import requests
+import database
 from bs4 import BeautifulSoup
+from game import Game
 
-url = 'https://hockey-reference.com'
-
-# store game id as YYYYMMDD0HOM, where HOM is the first three letters of the home city
+root_url = 'https://hockey-reference.com'
+schedule_url = "https://www.hockey-reference.com/leagues/NHL_2018_games.html"
 
 def get_html(url):
     req = requests.get(url)
@@ -29,18 +30,32 @@ def get_games_results():
 
     return daily_games_results
 
-def get_upcoming_games():
-    html = get_html(url)
-    games_list = html.find_all('div', {"id": "games"})
-    upcoming_games = []
-    for game in games_list:
-        game_list_links = game.find_all('a')
-        individual_game = []
-        for team in game_list_links:
-            individual_game.append(team.get_text())
-        print(individual_game)
-        upcoming_games.append(individual_game)
-    return upcoming_games
-    # get home team
-    # get away team
 
+def get_schedule():
+    html = get_html(schedule_url)
+    full_schedule = html.find('tbody')
+    return full_schedule
+
+
+def add_schedule_to_db(game, cursor):
+    cursor.execute("INSERT INTO public.games_list(game_date, away_team, away_team_score, "
+                   "home_team, home_team_score, overtime, attendance, game_id)"
+                   "VALUES(%s, %s, %s, %s, %s, %s, %s, %s)",
+                   (game.game_date, game.away_team, game.away_team_score, game.home_team,
+                    game.home_team_score, game.overtime, game.attendance, game.game_id))
+
+
+def parse_schedule_data(schedule, cursor):
+    games_list = schedule.find_all('tr')
+    for game in games_list:
+        game_object = Game(game)
+        add_schedule_to_db(game_object, cursor)
+
+
+conn = database.db_connect()
+cursor = conn.cursor()
+
+schedule = get_schedule()
+parse_schedule_data(schedule, cursor)
+conn.commit()
+conn.close()
