@@ -1,6 +1,7 @@
-class Game:
+class ScheduleGame:
     """
-    Game objects encapsulate all data about past and upcoming games
+    ScheduleGame objects encapsulate all game data for the purpose of parsing the game schedule.
+    game_information is a BeautifulSoup tag object
     """
     def __init__(self, game_information):
         self.game_date = game_information.find('th').get_text()
@@ -9,6 +10,7 @@ class Game:
         self.game_id = game_information.th.attrs.get('csk')
 
         if game_information.find('td', {'data-stat': 'visitor_goals'}).get_text() == '':
+            # These fields must be sent to the database as None if the game has not happened yet
             self.away_team_score = None
             self.home_team_score = None
             self.overtime = None
@@ -19,15 +21,35 @@ class Game:
             self.overtime = game_information.find('td', {'data-stat': 'overtimes'}).get_text()
             self.attendance = game_information.find('td', {'data-stat': 'attendance'}).get_text().replace(',', '')
 
-
-    def parse_game_id(self, game_information):
-        """
-        The game_id is scraped in the form of <a href="/boxscores/game_id.html"> at the start of the game object
-        This function strips out the game_id from the link text.
-        :param game: BS4 tag object
-        :return: string containing the game_id
-        """
-        return game_information.find('a')['href'].split('/')[2].split('.')[0]
-
     def __repr__(self):
         return "Date: {}\t{} @ {}".format(self.game_date, self.away_team, self.home_team)
+
+
+class Game:
+    """
+    Game objects encapsulate game data from the past or future
+    """
+    def __init__(self, game_information):
+        self.game_date = game_information[1]
+        self.away_team = game_information[2]
+        self.away_team_score = game_information[3]
+        self.home_team = game_information[4]
+        self.home_team_score = game_information[5]
+        self.game_id = game_information[6]
+        self.overtimes = game_information[7]
+        self.attendance = game_information[8]
+
+    def winner(self):
+        if self.away_team_score > self.home_team_score:
+            return self.away_team
+        else:
+            return self.home_team
+
+    def loser(self):
+        if self.away_team_score < self.home_team_score:
+            return self.away_team
+        else:
+            return self.home_team
+
+    def __repr__(self):
+        return "Game date: {}\t{} @ {}".format(self.game_date, self.away_team, self.home_team)
