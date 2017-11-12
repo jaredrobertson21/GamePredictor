@@ -1,8 +1,8 @@
-import requests
-import database
-from bs4 import BeautifulSoup
-from game import ScheduleGame, Game
 import datetime
+import requests
+from bs4 import BeautifulSoup
+#from .game import ScheduleGame, Game
+from .models import GamesList
 
 root_url = 'https://hockey-reference.com'
 schedule_url = "https://www.hockey-reference.com/leagues/NHL_2018_games.html"
@@ -71,7 +71,7 @@ def parse_schedule_data(schedule, cursor):
         add_schedule_to_db(game_object, cursor)
 
 
-def get_games_from_db(cursor, start_date, end_date=None):
+def get_games_from_db(start_date, end_date=None):
     """
     Retrieves game data for the specified time range
     :param cursor: database cursor object
@@ -79,19 +79,13 @@ def get_games_from_db(cursor, start_date, end_date=None):
     :param end_date:  datetime object representing the end date of the query
     :return: a list of Game objects
     """
+
     if end_date is None:
-        cursor.execute("SELECT * FROM public.games_list WHERE game_date = %s", (start_date.strftime('%Y-%m-%d'),))
-    else:
-        cursor.execute("SELECT * FROM public.games_list WHERE game_date >= %s AND game_date <= %s",
-                       (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')))
+        return GamesList.objects.filter(game_date=start_date)
+    #else:
+    #    cursor.execute("SELECT * FROM public.games_list WHERE game_date >= %s AND game_date <= %s",
+    #                   (start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')))
 
-    games_list = cursor.fetchall()
-    games_objects = []
-    for game in games_list:
-        game = Game(game)
-        games_objects.append(game)
-
-    return games_objects
 
 
 def update_scores_in_db(cursor, start_date, end_date=None):
@@ -121,12 +115,12 @@ def update_scores_in_db(cursor, start_date, end_date=None):
 def get_daily_games_list(cursor, date):
     cursor.execute("SELECT game_date, away_team, home_team, game_id FROM public.games_list WHERE game_date = %s",
                    (datetime.datetime.strptime(date, '%Y-%m-%d'),))
-    return cursor.fetchall()
+    games_list = []
+    for game in cursor.fetchall():
+        games_list.append(Game(game_date=game[0], away_team=game[1], home_team=game[2], game_id=game[3]))
+
+    return games_list
 
 
-conn = database.db_connect()
-cursor = conn.cursor()
-
-start_date = '2017-11-06'
-update_scores_in_db(cursor, start_date)
-conn.close()
+game = GamesList(game_date='2017-01-01', away_team='Vancouver', home_team='Edmonton', game_id='201701010EMD')
+game.save()

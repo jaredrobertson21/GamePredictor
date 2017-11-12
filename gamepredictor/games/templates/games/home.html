@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>NHL Game Predictor</h1>
+
+    <h5>Games for {{ today }}:</h5>
+
+    {% for game in games_list %}
+
+    <p>
+        <a href="#" onClick="document.getElementById({{ game.away_team }}{{ game.game_id }}).submit()">{{ game.away_team }} </a>
+        @ <a href="#" onClick="document.getElementById({{ game.home_team }}{{ game.game_id }}).submit()">{{ game.home_team }}</a>
+    </p>
+
+<p><a href="201711120ANA">Test</a></p>
+
+
+
+
+    {% endfor %}
+{% endblock %}

@@ -2,15 +2,16 @@ class Game:
     """
     Game objects encapsulate game data from the past or future
     """
-    def __init__(self, game_information):
-        self.game_date = game_information[1]
-        self.away_team = game_information[2]
-        self.away_team_score = game_information[3]
-        self.home_team = game_information[4]
-        self.home_team_score = game_information[5]
-        self.game_id = game_information[6]
-        self.overtime = game_information[7]
-        self.attendance = game_information[8]
+    def __init__(self, game_date=None, away_team=None, away_team_score=None, home_team=None, home_team_score=None,
+                 game_id=None, overtime=None, attendance=None):
+        self.game_date = game_date
+        self.away_team = away_team
+        self.away_team_score = away_team_score
+        self.home_team = home_team
+        self.home_team_score = home_team_score
+        self.game_id = game_id
+        self.overtime = overtime
+        self.attendance = attendance
 
     def winner(self):
         if self.away_team_score > self.home_team_score:
