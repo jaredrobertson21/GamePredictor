@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^games/', views.submit_prediction, name='submit_prediction'),
+    url(r'^submit_data/', views.submit_data, name='data'),
 ]

@@ -1,21 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
+    <br/>
+    <h4>Games for {{ today }}</h4>
+    <br/>
 
-    <h1>NHL Game Predictor</h1>
-
-    <h5>Games for {{ today }}:</h5>
-
-    {% for game in games_list %}
-
+    {% for game in games_data %}
     <p>
-        <a href="#" onClick="document.getElementById({{ game.away_team }}{{ game.game_id }}).submit()">{{ game.away_team }} </a>
-        @ <a href="#" onClick="document.getElementById({{ game.home_team }}{{ game.game_id }}).submit()">{{ game.home_team }}</a>
+        <div class="cont" id="{{ game.game_id }}">
+                <div class="logo away-team">
+                    <img src='{{ game.away_team_logo }}'/>
+                </div>
+                <div class="detail-container">
+                    <div class="game team-name away-team" id="{{ game.away_team }}{{ game.game_id }}">
+                        {{ game.away_team }}
+                    </div>
+                    <div class="game stats">
+                        {{ game.away_team_wins }}-{{ game.away_team_losses }}-{{ game.away_team_otl }}
+                    </div>
+                </div>
+
+                <div class="separator">VS</div>
+                <div class="detail-container">
+                    <div class="game team-name home-team" id="{{ game.home_team }}{{ game.game_id }}">
+                        {{ game.home_team }}
+                    </div>
+                    <div class="game stats">
+                        {{ game.home_team_wins }}-{{ game.home_team_losses }}-{{ game.home_team_otl }}
+                    </div>
+                </div>
+
+                <div class="logo home-team">
+                    <img src='{{ game.home_team_logo }}'/>
+                </div>
+        </div>
     </p>
 
-<p><a href="201711120ANA">Test</a></p>
-
-
-
-
     {% endfor %}
+
+    {% if user.is_authenticated %}
+        <button id="submit">Submit Predictions!</button>
+    {% else  %}
+        <h4>Login or signup to make a prediction.</h4>
+    {% endif %}
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'games/scripts.js' %}"></script>
+
 {% endblock %}

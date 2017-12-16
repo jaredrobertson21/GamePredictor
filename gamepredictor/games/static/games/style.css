@@ -1,0 +1,57 @@
+a:visited {
+    color: black;
+}
+
+.cont {
+    display: flex;
+    justify-content: center;
+    max-height: 112px;
+    border: 1px solid black;
+}
+
+.detail-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    margin: 5px 0px 5px 0px;
+}
+
+.game {
+    flex-basis: 250px;
+    justify-content: center;
+    transition: 100ms ease-in;
+    min-width: 250px;
+}
+
+.game:hover {
+    background-color: rgb(91, 91, 255);
+    color: white;
+}
+
+.game:active {
+    background-color:white;
+    transition: 10ms;
+}
+
+.separator {
+    flex-basis: 50px;
+    padding: 10px 0px 10px 0px;
+    margin: 5px 0px 5px 0px;
+    border: none;
+}
+
+.stats {
+    border-width: 1px 1px 0px 1px;
+    border-style: solid;
+    border-color: black;
+    margin-bottom: 5px;
+}
+
+.team-name {
+    border-width: 0px 1px 0px 1px;
+    border-style: solid;
+    border-color: black;
+    margin-top: 5px;
+}

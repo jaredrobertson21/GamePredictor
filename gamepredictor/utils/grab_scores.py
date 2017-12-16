@@ -64,4 +64,5 @@ def get_html(url):
     return BeautifulSoup(req.text, 'html.parser')
 
 if __name__ == '__main__':
-    update_scores_in_db('2017-11-11')
+    update_scores_in_db('2017-12-10', '2017-12-13')
+

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Stats for {{ user.username }}</h1>
+    <p>Wins: {{ user_record.wins }} </p>
+    <p>Losses: {{ user_record.losses }} </p>
+    <p>OTL: {{ user_record.otl }} </p>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'games/scripts.js' %}"></script>
+
+{% endblock %}

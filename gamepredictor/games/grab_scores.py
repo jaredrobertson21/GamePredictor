@@ -122,5 +122,3 @@ def get_daily_games_list(cursor, date):
     return games_list
 
 
-game = GamesList(game_date='2017-01-01', away_team='Vancouver', home_team='Edmonton', game_id='201701010EMD')
-game.save()
