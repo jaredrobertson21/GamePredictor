@@ -56,3 +56,24 @@ class ScheduleGame:
 
     def __repr__(self):
         return "Date: {}\t{} @ {}".format(self.game_date, self.away_team, self.home_team)
+
+    def winner(self):
+        if self.away_team_score:
+            if self.away_team_score > self.home_team_score:
+                return self.away_team
+            else:
+                return self.home_team
+        return "Game has not yet been played"
+
+    def loser(self):
+        if self.away_team_score:
+            if self.away_team_score > self.home_team_score:
+                return self.home_team
+            else:
+                return self.away_team
+        return "Game has not yet been played"
+
+    def is_overtime(self):
+        if self.overtime != '':
+            return True
+        return False

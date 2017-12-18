@@ -69,4 +69,4 @@ def update_user_stats(start_date, end_date=None):
 
 # Specify the date(s) to update the user stats
 if __name__ == '__main__':
-    update_user_stats('2017-12-10', '2017-12-13')
+    update_user_stats('2017-12-14', '2017-12-16')
